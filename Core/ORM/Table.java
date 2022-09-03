@@ -1,6 +1,13 @@
 package Core.ORM;
 
+import Core.Printer;
+import org.sqlite.SQLiteConfig;
+
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.security.Principal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
@@ -8,7 +15,7 @@ import java.util.Map;
 public abstract class Table {
     Map<String, String> types;
     ResultSet data;
-    public Table(ResultSet data) throws SQLException, IllegalAccessException {
+    public Table(ResultSet data) throws SQLException, IllegalAccessException, UnsupportedEncodingException {
         this.types = DbConnection.get_instance().get_field_type_map();;
         this.data = data;
         if(data.getClass() != NullResultSet.class) {
@@ -19,10 +26,8 @@ public abstract class Table {
         }
     }
 
-    public abstract void print_person();
-
     public void delete() throws NoSuchFieldException, IllegalAccessException {
-        Field Id = this.getClass().getDeclaredField("Id");
+        Field Id = this.getClass().getDeclaredField("id");
         DbConnection.get_instance().delete((Integer) Id.get(this));
     }
     public void save() throws SQLException, IllegalAccessException {
@@ -30,10 +35,10 @@ public abstract class Table {
         DbConnection.get_instance().update(fields, this);
     }
 
-    private void set_field_value(Field field) throws SQLException, IllegalAccessException {
+    private void set_field_value(Field field) throws SQLException, IllegalAccessException, UnsupportedEncodingException {
         switch (types.get(field.getName())) {
             case "INTEGER" -> set_integer_field(field);
-            case "TEXT"    -> set_string_field(field);
+            case "TEXT", "STRING", "VARCHAR" -> set_string_field(field);
             case "BOOLEAN" -> set_boolean_field(field);
         }
     }
@@ -47,7 +52,7 @@ public abstract class Table {
 
 
     }
-    private void set_string_field(Field field) throws SQLException, IllegalAccessException{
+    private void set_string_field(Field field) throws SQLException, IllegalAccessException, UnsupportedEncodingException {
         field.set(this, data.getString(field.getName()));
     }
 

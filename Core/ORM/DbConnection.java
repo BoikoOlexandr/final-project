@@ -1,5 +1,7 @@
 package Core.ORM;
 
+import org.sqlite.SQLiteConfig;
+
 import java.io.InputStream;
 import java.io.Reader;
 import java.lang.reflect.Field;
@@ -19,7 +21,6 @@ public class DbConnection {
     private static DbConnection instance;
     private Connection connection;
     private final Logger logger;
-
     public static DbConnection get_instance(String URL, String Table){
         if (instance == null){
 
@@ -34,8 +35,10 @@ public class DbConnection {
     private DbConnection(String URL, String Table){
         this.TABLE = Table;
         logger = Logger.getLogger(this.getClass().getSimpleName());
+        SQLiteConfig config = new SQLiteConfig();
+        config.setEncoding(SQLiteConfig.Encoding.UTF_8);
         try {
-            this.connection = DriverManager.getConnection(URL);
+            this.connection = DriverManager.getConnection(URL, config.toProperties());
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -85,10 +88,10 @@ public class DbConnection {
             PreparedStatement statement = connection.prepareStatement(new SqlBuilder().
                     Select().
                     from(TABLE).
-                    where("Id").getSQL() );
+                    where("id").getSQL() );
             statement.setInt(1, id);
             resultSet = statement.executeQuery();
-            if(resultSet.getInt("Id") == OUT_OF_RANGE){
+            if(resultSet.getInt("id") == OUT_OF_RANGE){
                 throw new SQLException();
             }
         } catch (SQLException e) {
@@ -108,7 +111,7 @@ public class DbConnection {
     }
     public void delete(int id){
         Map<String, String> where_map = new HashMap<>();
-        where_map.put("Id", String.valueOf(id));
+        where_map.put("id", String.valueOf(id));
         String SQL = new SqlBuilder().delete(TABLE).where(where_map).getSQL();
     }
 
