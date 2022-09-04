@@ -11,5 +11,7 @@ public class Project {
         DbConnection connection = DbConnection.get_instance(settings.URL, settings.Table);
         Act act = new Act(1);
         Printer.print(act);
+        act = new Act(2);
+        Printer.print(act);
     }
 }
