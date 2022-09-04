@@ -1,27 +1,43 @@
 package Core;
 
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+import java.util.Scanner;
 
 public class Printer {
-    public static void print(String str) throws UnsupportedEncodingException {
+    static String spliter = "_______________________________________________";
+    public static void print(String str){
         PrintWriter pw = new PrintWriter(new OutputStreamWriter(System.out, StandardCharsets.UTF_8), true);
         pw.println(str);
     }
-    public static void print(Act act) throws UnsupportedEncodingException {
-        String out = String.format("\t %s\n\n\n%s", act.header, format_text(act.text));
+    public static void print(Act act) {
+        String out = String.format("%s\n%s\n\n%s", act.header, spliter, format_text(act.text));
         print(out);
     }
-    private static String format_text(String text){
-        String formatted_text = "";
-        for (String paragraph: get_paragraphs(text)){
-            formatted_text+="\t";
-            formatted_text+=set_row_length(paragraph);
-            formatted_text+="\n";
+    public static void print(Day day) {
+        for(Act act: day.getAct_list()){
+            print(act);
+            input();
         }
-        return formatted_text;
+    }
+
+    private static void input() {
+        Scanner in = new Scanner(System.in);
+        print("<<<Нажмите Enter>>>");
+        in.nextLine();
+    }
+
+    private static String format_text(String text){
+        StringBuilder formatted_text = new StringBuilder();
+        for (String paragraph: get_paragraphs(text)){
+            formatted_text.append("\t");
+            formatted_text.append(set_row_length(paragraph));
+            formatted_text.append("\n");
+        }
+        return formatted_text.toString();
     }
 
 

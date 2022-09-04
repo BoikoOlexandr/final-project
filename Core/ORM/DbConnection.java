@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 public class DbConnection {
 
     public static final int OUT_OF_RANGE = 0;
-    private final String TABLE;
+    private String TABLE;
     private static DbConnection instance;
     private Connection connection;
     private final Logger logger;
@@ -101,6 +101,10 @@ public class DbConnection {
         return resultSet;
     }
 
+    public ResultSet get_row_by_id(int id, String table){
+        this.TABLE = table;
+        return this.get_row_by_id(id);
+    }
     public ResultSet get_rows_by_attribute(String Attribute, String value) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(new SqlBuilder().
                 Select().
