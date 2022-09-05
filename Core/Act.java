@@ -18,7 +18,7 @@ public class Act extends Table {
     public Act(ResultSet data) throws SQLException, IllegalAccessException, UnsupportedEncodingException {
         super(data);
     }
-    public Act(int id, int day) throws SQLException, IllegalAccessException, UnsupportedEncodingException {
-        super(DbConnection.get_instance().get_row_by_id(id, String.format("day%d",day)));
+    public Act(int id, String day) throws SQLException, IllegalAccessException, UnsupportedEncodingException {
+        super(DbConnection.get_instance().get_row_by_id(id, day));
     }
 }

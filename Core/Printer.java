@@ -8,20 +8,25 @@ import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 public class Printer {
-    static String spliter = "_______________________________________________";
+    static String spliter = "\n_______________________________________________\n";
     public static void print(String str){
         PrintWriter pw = new PrintWriter(new OutputStreamWriter(System.out, StandardCharsets.UTF_8), true);
         pw.println(str);
     }
     public static void print(Act act) {
-        String out = String.format("%s\n%s\n\n%s", act.header, spliter, format_text(act.text));
+        String out = String.format("%s%s\n%s", act.header, spliter, format_text(act.text));
         print(out);
     }
     public static void print(Day day) {
+        print_day_header(day);
         for(Act act: day.getAct_list()){
             print(act);
             input();
         }
+    }
+
+    private static void print_day_header(Day day) {
+       print(String.format("\n%sДень %s%s", spliter, day.getDay_number(), spliter));
     }
 
     private static void input() {

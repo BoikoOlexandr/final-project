@@ -7,9 +7,17 @@ import java.util.List;
 
 public class Day {
     List<Act> act_list = new ArrayList<>();
+    private final String day_name;
+
+    public int getDay_number() {
+        return day_number;
+    }
+
     private final int day_number;
+
     public Day(int day_number){
         this.day_number = day_number;
+        this.day_name = String.format("day%d",day_number);
     }
     public List<Act> getAct_list() {
         return act_list;
@@ -19,6 +27,6 @@ public class Day {
     }
 
     public void add_act (int act_id) throws SQLException, UnsupportedEncodingException, IllegalAccessException {
-        this.add_act(new Act(act_id, day_number));
+        this.add_act(new Act(act_id, day_name));
     }
 }
