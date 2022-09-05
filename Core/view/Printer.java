@@ -16,7 +16,6 @@ public class Printer {
         print_day_header(day);
         for(Act act: day.getAct_list()){
             print(act);
-            input.get_empty_input();
         }
     }
 
@@ -25,6 +24,9 @@ public class Printer {
         print( format_text(act.text));
         if(act.choises != null){
             print_act_choices(act.choises);
+            input.get_choice();
+        }else {
+            input.get_empty_input();
         }
     }
 

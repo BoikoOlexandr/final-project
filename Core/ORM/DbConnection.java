@@ -17,6 +17,11 @@ import java.util.logging.Logger;
 public class DbConnection {
 
     public static final int OUT_OF_RANGE = 0;
+
+    public void setTABLE(String TABLE) {
+        this.TABLE = TABLE;
+    }
+
     private String TABLE;
     private static DbConnection instance;
     private Connection connection;
@@ -69,6 +74,18 @@ public class DbConnection {
 
     }
 
+    public void insert(Field[] fields, Table obj) throws IllegalAccessException, SQLException {
+        Map<String, String> insert_map = new HashMap<>();
+        int id = 0;
+        for (Field field : fields) {
+            if (!field.getName().trim().equals("id")) {
+                insert_map.put(field.getName(), String.valueOf(field.get(obj)));
+            }
+        }
+        System.out.println(new SqlBuilder().Insert(TABLE, insert_map).getSQL());
+        int updated = connection.createStatement().executeUpdate(new SqlBuilder()
+                .Insert(TABLE, insert_map).getSQL());
+    }
     public Map<String, String> get_field_type_map() throws SQLException  {
         ResultSetMetaData types = connection.createStatement()
                 .executeQuery(new SqlBuilder()
@@ -106,12 +123,10 @@ public class DbConnection {
         return this.get_row_by_id(id);
     }
     public ResultSet get_rows_by_attribute(String Attribute, String value) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement(new SqlBuilder().
+        return connection.createStatement().executeQuery(new SqlBuilder().
                 Select().
                 from(TABLE).
-                where(Attribute).getSQL() );
-        statement.setString(1, value);
-        return statement.executeQuery();
+                where(Attribute, value).getSQL() );
     }
     public void delete(int id){
         Map<String, String> where_map = new HashMap<>();
