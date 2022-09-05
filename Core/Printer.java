@@ -1,22 +1,12 @@
 package Core;
 
-import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 public class Printer {
-    static String spliter = "\n_______________________________________________\n";
-    public static void print(String str){
-        PrintWriter pw = new PrintWriter(new OutputStreamWriter(System.out, StandardCharsets.UTF_8), true);
-        pw.println(str);
-    }
-    public static void print(Act act) {
-        String out = String.format("%s%s\n%s", act.header, spliter, format_text(act.text));
-        print(out);
-    }
+    static String splitter = "\n_______________________________________________\n";
     public static void print(Day day) {
         print_day_header(day);
         for(Act act: day.getAct_list()){
@@ -25,8 +15,33 @@ public class Printer {
         }
     }
 
+    public static void print(Act act) {
+        print_act_header(act);
+        print( format_text(act.text));
+        if(act.choises != null){
+            print_act_choices(act.choises);
+        }
+    }
+
+    public static void print(String str){
+        PrintWriter pw = new PrintWriter(new OutputStreamWriter(System.out, StandardCharsets.UTF_8), true);
+        pw.println(str);
+    }
+
     private static void print_day_header(Day day) {
-       print(String.format("\n%sДень %s%s", spliter, day.getDay_number(), spliter));
+       print(String.format("\n%sДень %s%s", splitter, day.getDay_number(), splitter));
+    }
+
+    private static void print_act_header(Act act) {
+        print(act.header+splitter);
+    }
+
+    private static void print_act_choices(String choices) {
+        int i = 0;
+        for(String choice: choices.split("\n"))
+        {
+            print(String.format("\t%d) %s",++i,choice));
+        }
     }
 
     private static void input() {
@@ -44,7 +59,6 @@ public class Printer {
         }
         return formatted_text.toString();
     }
-
 
     private static String[] get_paragraphs(String text){
         return text.split("\n");
