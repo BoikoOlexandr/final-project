@@ -1,4 +1,8 @@
-package Core;
+package Core.view;
+
+import Core.Act;
+import Core.Day;
+import Core.settings;
 
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -6,12 +10,13 @@ import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 public class Printer {
+    static Input input = new Input();
     static String splitter = "\n_______________________________________________\n";
     public static void print(Day day) {
         print_day_header(day);
         for(Act act: day.getAct_list()){
             print(act);
-            input();
+            input.get_empty_input();
         }
     }
 
@@ -44,11 +49,7 @@ public class Printer {
         }
     }
 
-    private static void input() {
-        Scanner in = new Scanner(System.in);
-        print("<<<Нажмите Enter>>>");
-        in.nextLine();
-    }
+
 
     private static String format_text(String text){
         StringBuilder formatted_text = new StringBuilder();
