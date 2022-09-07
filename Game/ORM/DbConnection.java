@@ -1,4 +1,4 @@
-package Core.ORM;
+package Game.ORM;
 
 import org.sqlite.SQLiteConfig;
 
@@ -8,9 +8,8 @@ import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.*;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
+import java.sql.Date;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -134,6 +133,17 @@ public class DbConnection {
         String SQL = new SqlBuilder().delete(TABLE).where(where_map).getSQL();
     }
 
+    public List<String> get_table_names() throws SQLException {
+        List<String> table_names = new ArrayList<>();
+        ResultSet res = connection.createStatement().executeQuery(new SqlBuilder().
+                Select("name").
+                from("sqlite_master").
+                where("type", "table").getSQL() );
+        while ( res.next()) {
+            table_names.add(res.getString(1));
+        }
+        return table_names;
+    }
     public int get_number_of_rows() throws SQLException {
         return  connection.createStatement().executeQuery(new SqlBuilder().
                 Select(" COUNT(*)").

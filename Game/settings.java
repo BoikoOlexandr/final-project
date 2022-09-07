@@ -1,4 +1,4 @@
-package Core;
+package Game;
 
 public class settings {
     public static String URL = "jdbc:sqlite:resourses/game.sqlite3";

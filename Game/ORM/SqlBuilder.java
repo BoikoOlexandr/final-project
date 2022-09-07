@@ -1,4 +1,4 @@
-package Core.ORM;
+package Game.ORM;
 
 import java.util.Map;
 

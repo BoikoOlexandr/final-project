@@ -1,13 +1,12 @@
-package Core.view;
+package Game.view;
 
-import Core.Act;
-import Core.Day;
-import Core.settings;
+import Game.Core.Act;
+import Game.Core.Day;
+import Game.settings;
 
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
-import java.util.Scanner;
 
 public class Printer {
     static Input input = new Input();
@@ -30,6 +29,7 @@ public class Printer {
         }
     }
 
+
     public static void print(String str){
         PrintWriter pw = new PrintWriter(new OutputStreamWriter(System.out, StandardCharsets.UTF_8), true);
         pw.println(str);
@@ -50,8 +50,6 @@ public class Printer {
             print(String.format("\t%d) %s",++i,choice));
         }
     }
-
-
 
     private static String format_text(String text){
         StringBuilder formatted_text = new StringBuilder();

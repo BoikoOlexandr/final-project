@@ -1,11 +1,11 @@
-package Core.view;
+package Game.view;
 
-import Core.Command.QuitCommand;
+import Game.Command.QuitCommand;
 
 import java.util.Objects;
 import java.util.Scanner;
 
-import static Core.view.Printer.print;
+import static Game.view.Printer.print;
 
 public class Input {
 

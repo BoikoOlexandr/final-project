@@ -1,6 +1,5 @@
-package Core.ORM;
+package Game.ORM;
 
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.sql.SQLException;

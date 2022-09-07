@@ -1,4 +1,6 @@
-package Core;
+package Game.Core;
+
+import Game.Core.Act;
 
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
@@ -26,7 +28,7 @@ public class Day {
         this.act_list.add(act);
     }
 
-    public void add_act (int act_id) throws SQLException, UnsupportedEncodingException, IllegalAccessException {
+    public void add_act (int act_id) throws SQLException, IllegalAccessException {
         this.add_act(new Act(act_id, day_name));
     }
 }
