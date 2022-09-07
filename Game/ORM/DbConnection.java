@@ -25,18 +25,20 @@ public class DbConnection {
     private static DbConnection instance;
     private Connection connection;
     private final Logger logger;
-    public static DbConnection get_instance(String URL, String Table){
-        if (instance == null){
+
+    public static DbConnection get_instance(String URL, String Table) {
+        if (instance == null) {
 
             instance = new DbConnection(URL, Table);
         }
         return instance;
     }
-    public static DbConnection get_instance(){
+
+    public static DbConnection get_instance() {
         return instance;
     }
 
-    private DbConnection(String URL, String Table){
+    private DbConnection(String URL, String Table) {
         this.TABLE = Table;
         logger = Logger.getLogger(this.getClass().getSimpleName());
         SQLiteConfig config = new SQLiteConfig();
@@ -63,12 +65,11 @@ public class DbConnection {
                 .update(TABLE)
                 .set(set_map)
                 .where(where_map).getSQL());
-        if (updated >=1 ){
+        if (updated >= 1) {
             logger.log(Level.WARNING, String.format("Table %s is updated", TABLE));
-        }else {
+        } else {
             logger.log(Level.WARNING, String.format("Table %s is not updated", TABLE));
         }
-
 
 
     }
@@ -85,14 +86,15 @@ public class DbConnection {
         int updated = connection.createStatement().executeUpdate(new SqlBuilder()
                 .Insert(TABLE, insert_map).getSQL());
     }
-    public Map<String, String> get_field_type_map() throws SQLException  {
+
+    public Map<String, String> get_field_type_map() throws SQLException {
         ResultSetMetaData types = connection.createStatement()
                 .executeQuery(new SqlBuilder()
                         .Select()
                         .from(TABLE).getSQL())
                 .getMetaData();
         Map<String, String> field_type_map = new HashMap<>();
-        for(int i = 1; i < types.getColumnCount() + 1; i++){
+        for (int i = 1; i < types.getColumnCount() + 1; i++) {
             field_type_map.put(types.getColumnName(i), types.getColumnTypeName(i));
         }
         return field_type_map;
@@ -104,30 +106,32 @@ public class DbConnection {
             PreparedStatement statement = connection.prepareStatement(new SqlBuilder().
                     Select().
                     from(TABLE).
-                    where("id").getSQL() );
+                    where("id").getSQL());
             statement.setInt(1, id);
             resultSet = statement.executeQuery();
-            if(resultSet.getInt("id") == OUT_OF_RANGE){
+            if (resultSet.getInt("id") == OUT_OF_RANGE) {
                 throw new SQLException();
             }
         } catch (SQLException e) {
-            logger.log(Level.WARNING,String.format("Row number %d does not exist in database", id));
+            logger.log(Level.WARNING, String.format("Row number %d does not exist in database", id));
             return new NullResultSet();
         }
         return resultSet;
     }
 
-    public ResultSet get_row_by_id(int id, String table){
+    public ResultSet get_row_by_id(int id, String table) {
         this.TABLE = table;
         return this.get_row_by_id(id);
     }
+
     public ResultSet get_rows_by_attribute(String Attribute, String value) throws SQLException {
         return connection.createStatement().executeQuery(new SqlBuilder().
                 Select().
                 from(TABLE).
-                where(Attribute, value).getSQL() );
+                where(Attribute, value).getSQL());
     }
-    public void delete(int id){
+
+    public void delete(int id) {
         Map<String, String> where_map = new HashMap<>();
         where_map.put("id", String.valueOf(id));
         String SQL = new SqlBuilder().delete(TABLE).where(where_map).getSQL();
@@ -138,43 +142,44 @@ public class DbConnection {
         ResultSet res = connection.createStatement().executeQuery(new SqlBuilder().
                 Select("name").
                 from("sqlite_master").
-                where("type", "table").getSQL() );
-        while ( res.next()) {
+                where("type", "table").getSQL());
+        while (res.next()) {
             table_names.add(res.getString(1));
         }
         return table_names;
     }
+
     public int get_number_of_rows() throws SQLException {
-        return  connection.createStatement().executeQuery(new SqlBuilder().
+        return connection.createStatement().executeQuery(new SqlBuilder().
                 Select(" COUNT(*)").
                 from(TABLE).getSQL()).getInt(1);
     }
 }
 
-class NullResultSet implements ResultSet{
+class NullResultSet implements ResultSet {
 
     @Override
-    public boolean next()   {
+    public boolean next() {
         return false;
     }
 
     @Override
-    public void close()   {
+    public void close() {
 
     }
 
     @Override
-    public boolean wasNull()   {
+    public boolean wasNull() {
         return false;
     }
 
     @Override
-    public String getString(int columnIndex)   {
+    public String getString(int columnIndex) {
         return null;
     }
 
     @Override
-    public boolean getBoolean(int columnIndex)   {
+    public boolean getBoolean(int columnIndex) {
         return false;
     }
 
@@ -199,22 +204,22 @@ class NullResultSet implements ResultSet{
     }
 
     @Override
-    public float getFloat(int columnIndex){
+    public float getFloat(int columnIndex) {
         return 0;
     }
 
     @Override
-    public double getDouble(int columnIndex)  {
+    public double getDouble(int columnIndex) {
         return 0;
     }
 
     @Override
-    public BigDecimal getBigDecimal(int columnIndex, int scale)  {
+    public BigDecimal getBigDecimal(int columnIndex, int scale) {
         return null;
     }
 
     @Override
-    public byte[] getBytes(int columnIndex)  {
+    public byte[] getBytes(int columnIndex) {
         return new byte[0];
     }
 
@@ -224,887 +229,887 @@ class NullResultSet implements ResultSet{
     }
 
     @Override
-    public Time getTime(int columnIndex)  {
+    public Time getTime(int columnIndex) {
         return null;
     }
 
     @Override
-    public Timestamp getTimestamp(int columnIndex)   {
+    public Timestamp getTimestamp(int columnIndex) {
         return null;
     }
 
     @Override
-    public InputStream getAsciiStream(int columnIndex)   {
+    public InputStream getAsciiStream(int columnIndex) {
         return null;
     }
 
     @Override
-    public InputStream getUnicodeStream(int columnIndex)   {
+    public InputStream getUnicodeStream(int columnIndex) {
         return null;
     }
 
     @Override
-    public InputStream getBinaryStream(int columnIndex)   {
+    public InputStream getBinaryStream(int columnIndex) {
         return null;
     }
 
     @Override
-    public String getString(String columnLabel)   {
+    public String getString(String columnLabel) {
         return null;
     }
 
     @Override
-    public boolean getBoolean(String columnLabel)   {
+    public boolean getBoolean(String columnLabel) {
         return false;
     }
 
     @Override
-    public byte getByte(String columnLabel)   {
+    public byte getByte(String columnLabel) {
         return 0;
     }
 
     @Override
-    public short getShort(String columnLabel)   {
+    public short getShort(String columnLabel) {
         return 0;
     }
 
     @Override
-    public int getInt(String columnLabel)   {
+    public int getInt(String columnLabel) {
         return 0;
     }
 
     @Override
-    public long getLong(String columnLabel)   {
+    public long getLong(String columnLabel) {
         return 0;
     }
 
     @Override
-    public float getFloat(String columnLabel)   {
+    public float getFloat(String columnLabel) {
         return 0;
     }
 
     @Override
-    public double getDouble(String columnLabel)   {
+    public double getDouble(String columnLabel) {
         return 0;
     }
 
     @Override
-    public BigDecimal getBigDecimal(String columnLabel, int scale)   {
+    public BigDecimal getBigDecimal(String columnLabel, int scale) {
         return null;
     }
 
     @Override
-    public byte[] getBytes(String columnLabel)   {
+    public byte[] getBytes(String columnLabel) {
         return new byte[0];
     }
 
     @Override
-    public Date getDate(String columnLabel)   {
+    public Date getDate(String columnLabel) {
         return null;
     }
 
     @Override
-    public Time getTime(String columnLabel)   {
+    public Time getTime(String columnLabel) {
         return null;
     }
 
     @Override
-    public Timestamp getTimestamp(String columnLabel)   {
+    public Timestamp getTimestamp(String columnLabel) {
         return null;
     }
 
     @Override
-    public InputStream getAsciiStream(String columnLabel)   {
+    public InputStream getAsciiStream(String columnLabel) {
         return null;
     }
 
     @Override
-    public InputStream getUnicodeStream(String columnLabel)   {
+    public InputStream getUnicodeStream(String columnLabel) {
         return null;
     }
 
     @Override
-    public InputStream getBinaryStream(String columnLabel)   {
+    public InputStream getBinaryStream(String columnLabel) {
         return null;
     }
 
     @Override
-    public SQLWarning getWarnings()   {
+    public SQLWarning getWarnings() {
         return null;
     }
 
     @Override
-    public void clearWarnings()   {
+    public void clearWarnings() {
 
     }
 
     @Override
-    public String getCursorName()   {
+    public String getCursorName() {
         return null;
     }
 
     @Override
-    public ResultSetMetaData getMetaData()   {
+    public ResultSetMetaData getMetaData() {
         return null;
     }
 
     @Override
-    public Object getObject(int columnIndex)   {
+    public Object getObject(int columnIndex) {
         return null;
     }
 
     @Override
-    public Object getObject(String columnLabel)   {
+    public Object getObject(String columnLabel) {
         return null;
     }
 
     @Override
-    public int findColumn(String columnLabel)   {
+    public int findColumn(String columnLabel) {
         return 0;
     }
 
     @Override
-    public Reader getCharacterStream(int columnIndex)   {
+    public Reader getCharacterStream(int columnIndex) {
         return null;
     }
 
     @Override
-    public Reader getCharacterStream(String columnLabel)   {
+    public Reader getCharacterStream(String columnLabel) {
         return null;
     }
 
     @Override
-    public BigDecimal getBigDecimal(int columnIndex)   {
+    public BigDecimal getBigDecimal(int columnIndex) {
         return null;
     }
 
     @Override
-    public BigDecimal getBigDecimal(String columnLabel)   {
+    public BigDecimal getBigDecimal(String columnLabel) {
         return null;
     }
 
     @Override
-    public boolean isBeforeFirst()   {
+    public boolean isBeforeFirst() {
         return false;
     }
 
     @Override
-    public boolean isAfterLast()   {
+    public boolean isAfterLast() {
         return false;
     }
 
     @Override
-    public boolean isFirst()   {
+    public boolean isFirst() {
         return false;
     }
 
     @Override
-    public boolean isLast()   {
+    public boolean isLast() {
         return false;
     }
 
     @Override
-    public void beforeFirst()   {
+    public void beforeFirst() {
 
     }
 
     @Override
-    public void afterLast()   {
+    public void afterLast() {
 
     }
 
     @Override
-    public boolean first()   {
+    public boolean first() {
         return false;
     }
 
     @Override
-    public boolean last()   {
+    public boolean last() {
         return false;
     }
 
     @Override
-    public int getRow()   {
+    public int getRow() {
         return 0;
     }
 
     @Override
-    public boolean absolute(int row)   {
+    public boolean absolute(int row) {
         return false;
     }
 
     @Override
-    public boolean relative(int rows)   {
+    public boolean relative(int rows) {
         return false;
     }
 
     @Override
-    public boolean previous()   {
+    public boolean previous() {
         return false;
     }
 
     @Override
-    public void setFetchDirection(int direction)   {
+    public void setFetchDirection(int direction) {
 
     }
 
     @Override
-    public int getFetchDirection()   {
+    public int getFetchDirection() {
         return 0;
     }
 
     @Override
-    public void setFetchSize(int rows)   {
+    public void setFetchSize(int rows) {
 
     }
 
     @Override
-    public int getFetchSize()   {
+    public int getFetchSize() {
         return 0;
     }
 
     @Override
-    public int getType()   {
+    public int getType() {
         return 0;
     }
 
     @Override
-    public int getConcurrency()   {
+    public int getConcurrency() {
         return 0;
     }
 
     @Override
-    public boolean rowUpdated()   {
+    public boolean rowUpdated() {
         return false;
     }
 
     @Override
-    public boolean rowInserted()   {
+    public boolean rowInserted() {
         return false;
     }
 
     @Override
-    public boolean rowDeleted()   {
+    public boolean rowDeleted() {
         return false;
     }
 
     @Override
-    public void updateNull(int columnIndex)   {
+    public void updateNull(int columnIndex) {
 
     }
 
     @Override
-    public void updateBoolean(int columnIndex, boolean x)   {
+    public void updateBoolean(int columnIndex, boolean x) {
 
     }
 
     @Override
-    public void updateByte(int columnIndex, byte x)   {
+    public void updateByte(int columnIndex, byte x) {
 
     }
 
     @Override
-    public void updateShort(int columnIndex, short x)   {
+    public void updateShort(int columnIndex, short x) {
 
     }
 
     @Override
-    public void updateInt(int columnIndex, int x)   {
+    public void updateInt(int columnIndex, int x) {
 
     }
 
     @Override
-    public void updateLong(int columnIndex, long x)   {
+    public void updateLong(int columnIndex, long x) {
 
     }
 
     @Override
-    public void updateFloat(int columnIndex, float x)   {
+    public void updateFloat(int columnIndex, float x) {
 
     }
 
     @Override
-    public void updateDouble(int columnIndex, double x)   {
+    public void updateDouble(int columnIndex, double x) {
 
     }
 
     @Override
-    public void updateBigDecimal(int columnIndex, BigDecimal x)   {
+    public void updateBigDecimal(int columnIndex, BigDecimal x) {
 
     }
 
     @Override
-    public void updateString(int columnIndex, String x)   {
+    public void updateString(int columnIndex, String x) {
 
     }
 
     @Override
-    public void updateBytes(int columnIndex, byte[] x)   {
+    public void updateBytes(int columnIndex, byte[] x) {
 
     }
 
     @Override
-    public void updateDate(int columnIndex, Date x)   {
+    public void updateDate(int columnIndex, Date x) {
 
     }
 
     @Override
-    public void updateTime(int columnIndex, Time x)   {
+    public void updateTime(int columnIndex, Time x) {
 
     }
 
     @Override
-    public void updateTimestamp(int columnIndex, Timestamp x)   {
+    public void updateTimestamp(int columnIndex, Timestamp x) {
 
     }
 
     @Override
-    public void updateAsciiStream(int columnIndex, InputStream x, int length)   {
+    public void updateAsciiStream(int columnIndex, InputStream x, int length) {
 
     }
 
     @Override
-    public void updateBinaryStream(int columnIndex, InputStream x, int length)   {
+    public void updateBinaryStream(int columnIndex, InputStream x, int length) {
 
     }
 
     @Override
-    public void updateCharacterStream(int columnIndex, Reader x, int length)   {
+    public void updateCharacterStream(int columnIndex, Reader x, int length) {
 
     }
 
     @Override
-    public void updateObject(int columnIndex, Object x, int scaleOrLength)   {
+    public void updateObject(int columnIndex, Object x, int scaleOrLength) {
 
     }
 
     @Override
-    public void updateObject(int columnIndex, Object x)   {
+    public void updateObject(int columnIndex, Object x) {
 
     }
 
     @Override
-    public void updateNull(String columnLabel)   {
+    public void updateNull(String columnLabel) {
 
     }
 
     @Override
-    public void updateBoolean(String columnLabel, boolean x)   {
+    public void updateBoolean(String columnLabel, boolean x) {
 
     }
 
     @Override
-    public void updateByte(String columnLabel, byte x)   {
+    public void updateByte(String columnLabel, byte x) {
 
     }
 
     @Override
-    public void updateShort(String columnLabel, short x)   {
+    public void updateShort(String columnLabel, short x) {
 
     }
 
     @Override
-    public void updateInt(String columnLabel, int x)   {
+    public void updateInt(String columnLabel, int x) {
 
     }
 
     @Override
-    public void updateLong(String columnLabel, long x)   {
+    public void updateLong(String columnLabel, long x) {
 
     }
 
     @Override
-    public void updateFloat(String columnLabel, float x)   {
+    public void updateFloat(String columnLabel, float x) {
 
     }
 
     @Override
-    public void updateDouble(String columnLabel, double x)   {
+    public void updateDouble(String columnLabel, double x) {
 
     }
 
     @Override
-    public void updateBigDecimal(String columnLabel, BigDecimal x)   {
+    public void updateBigDecimal(String columnLabel, BigDecimal x) {
 
     }
 
     @Override
-    public void updateString(String columnLabel, String x)   {
+    public void updateString(String columnLabel, String x) {
 
     }
 
     @Override
-    public void updateBytes(String columnLabel, byte[] x)   {
+    public void updateBytes(String columnLabel, byte[] x) {
 
     }
 
     @Override
-    public void updateDate(String columnLabel, Date x)   {
+    public void updateDate(String columnLabel, Date x) {
 
     }
 
     @Override
-    public void updateTime(String columnLabel, Time x)   {
+    public void updateTime(String columnLabel, Time x) {
 
     }
 
     @Override
-    public void updateTimestamp(String columnLabel, Timestamp x)   {
+    public void updateTimestamp(String columnLabel, Timestamp x) {
 
     }
 
     @Override
-    public void updateAsciiStream(String columnLabel, InputStream x, int length)   {
+    public void updateAsciiStream(String columnLabel, InputStream x, int length) {
 
     }
 
     @Override
-    public void updateBinaryStream(String columnLabel, InputStream x, int length)   {
+    public void updateBinaryStream(String columnLabel, InputStream x, int length) {
 
     }
 
     @Override
-    public void updateCharacterStream(String columnLabel, Reader reader, int length)   {
+    public void updateCharacterStream(String columnLabel, Reader reader, int length) {
 
     }
 
     @Override
-    public void updateObject(String columnLabel, Object x, int scaleOrLength)   {
+    public void updateObject(String columnLabel, Object x, int scaleOrLength) {
 
     }
 
     @Override
-    public void updateObject(String columnLabel, Object x)   {
+    public void updateObject(String columnLabel, Object x) {
 
     }
 
     @Override
-    public void insertRow()   {
+    public void insertRow() {
 
     }
 
     @Override
-    public void updateRow()   {
+    public void updateRow() {
 
     }
 
     @Override
-    public void deleteRow()   {
+    public void deleteRow() {
 
     }
 
     @Override
-    public void refreshRow()   {
+    public void refreshRow() {
 
     }
 
     @Override
-    public void cancelRowUpdates()   {
+    public void cancelRowUpdates() {
 
     }
 
     @Override
-    public void moveToInsertRow()   {
+    public void moveToInsertRow() {
 
     }
 
     @Override
-    public void moveToCurrentRow()   {
+    public void moveToCurrentRow() {
 
     }
 
     @Override
-    public Statement getStatement()   {
+    public Statement getStatement() {
         return null;
     }
 
     @Override
-    public Object getObject(int columnIndex, Map<String, Class<?>> map)   {
+    public Object getObject(int columnIndex, Map<String, Class<?>> map) {
         return null;
     }
 
     @Override
-    public Ref getRef(int columnIndex)   {
+    public Ref getRef(int columnIndex) {
         return null;
     }
 
     @Override
-    public Blob getBlob(int columnIndex)   {
+    public Blob getBlob(int columnIndex) {
         return null;
     }
 
     @Override
-    public Clob getClob(int columnIndex)   {
+    public Clob getClob(int columnIndex) {
         return null;
     }
 
     @Override
-    public Array getArray(int columnIndex)   {
+    public Array getArray(int columnIndex) {
         return null;
     }
 
     @Override
-    public Object getObject(String columnLabel, Map<String, Class<?>> map)   {
+    public Object getObject(String columnLabel, Map<String, Class<?>> map) {
         return null;
     }
 
     @Override
-    public Ref getRef(String columnLabel)   {
+    public Ref getRef(String columnLabel) {
         return null;
     }
 
     @Override
-    public Blob getBlob(String columnLabel)   {
+    public Blob getBlob(String columnLabel) {
         return null;
     }
 
     @Override
-    public Clob getClob(String columnLabel)   {
+    public Clob getClob(String columnLabel) {
         return null;
     }
 
     @Override
-    public Array getArray(String columnLabel)   {
+    public Array getArray(String columnLabel) {
         return null;
     }
 
     @Override
-    public Date getDate(int columnIndex, Calendar cal)   {
+    public Date getDate(int columnIndex, Calendar cal) {
         return null;
     }
 
     @Override
-    public Date getDate(String columnLabel, Calendar cal)   {
+    public Date getDate(String columnLabel, Calendar cal) {
         return null;
     }
 
     @Override
-    public Time getTime(int columnIndex, Calendar cal)   {
+    public Time getTime(int columnIndex, Calendar cal) {
         return null;
     }
 
     @Override
-    public Time getTime(String columnLabel, Calendar cal)   {
+    public Time getTime(String columnLabel, Calendar cal) {
         return null;
     }
 
     @Override
-    public Timestamp getTimestamp(int columnIndex, Calendar cal)   {
+    public Timestamp getTimestamp(int columnIndex, Calendar cal) {
         return null;
     }
 
     @Override
-    public Timestamp getTimestamp(String columnLabel, Calendar cal)   {
+    public Timestamp getTimestamp(String columnLabel, Calendar cal) {
         return null;
     }
 
     @Override
-    public URL getURL(int columnIndex)   {
+    public URL getURL(int columnIndex) {
         return null;
     }
 
     @Override
-    public URL getURL(String columnLabel)   {
+    public URL getURL(String columnLabel) {
         return null;
     }
 
     @Override
-    public void updateRef(int columnIndex, Ref x)   {
+    public void updateRef(int columnIndex, Ref x) {
 
     }
 
     @Override
-    public void updateRef(String columnLabel, Ref x)   {
+    public void updateRef(String columnLabel, Ref x) {
 
     }
 
     @Override
-    public void updateBlob(int columnIndex, Blob x)   {
+    public void updateBlob(int columnIndex, Blob x) {
 
     }
 
     @Override
-    public void updateBlob(String columnLabel, Blob x)   {
+    public void updateBlob(String columnLabel, Blob x) {
 
     }
 
     @Override
-    public void updateClob(int columnIndex, Clob x)   {
+    public void updateClob(int columnIndex, Clob x) {
 
     }
 
     @Override
-    public void updateClob(String columnLabel, Clob x)   {
+    public void updateClob(String columnLabel, Clob x) {
 
     }
 
     @Override
-    public void updateArray(int columnIndex, Array x)   {
+    public void updateArray(int columnIndex, Array x) {
 
     }
 
     @Override
-    public void updateArray(String columnLabel, Array x)   {
+    public void updateArray(String columnLabel, Array x) {
 
     }
 
     @Override
-    public RowId getRowId(int columnIndex)   {
+    public RowId getRowId(int columnIndex) {
         return null;
     }
 
     @Override
-    public RowId getRowId(String columnLabel)   {
+    public RowId getRowId(String columnLabel) {
         return null;
     }
 
     @Override
-    public void updateRowId(int columnIndex, RowId x)   {
+    public void updateRowId(int columnIndex, RowId x) {
 
     }
 
     @Override
-    public void updateRowId(String columnLabel, RowId x)   {
+    public void updateRowId(String columnLabel, RowId x) {
 
     }
 
     @Override
-    public int getHoldability()   {
+    public int getHoldability() {
         return 0;
     }
 
     @Override
-    public boolean isClosed()   {
+    public boolean isClosed() {
         return false;
     }
 
     @Override
-    public void updateNString(int columnIndex, String nString)   {
+    public void updateNString(int columnIndex, String nString) {
 
     }
 
     @Override
-    public void updateNString(String columnLabel, String nString)   {
+    public void updateNString(String columnLabel, String nString) {
 
     }
 
     @Override
-    public void updateNClob(int columnIndex, NClob nClob)   {
+    public void updateNClob(int columnIndex, NClob nClob) {
 
     }
 
     @Override
-    public void updateNClob(String columnLabel, NClob nClob)   {
+    public void updateNClob(String columnLabel, NClob nClob) {
 
     }
 
     @Override
-    public NClob getNClob(int columnIndex)   {
+    public NClob getNClob(int columnIndex) {
         return null;
     }
 
     @Override
-    public NClob getNClob(String columnLabel)   {
+    public NClob getNClob(String columnLabel) {
         return null;
     }
 
     @Override
-    public SQLXML getSQLXML(int columnIndex)   {
+    public SQLXML getSQLXML(int columnIndex) {
         return null;
     }
 
     @Override
-    public SQLXML getSQLXML(String columnLabel)   {
+    public SQLXML getSQLXML(String columnLabel) {
         return null;
     }
 
     @Override
-    public void updateSQLXML(int columnIndex, SQLXML xmlObject)   {
+    public void updateSQLXML(int columnIndex, SQLXML xmlObject) {
 
     }
 
     @Override
-    public void updateSQLXML(String columnLabel, SQLXML xmlObject)   {
+    public void updateSQLXML(String columnLabel, SQLXML xmlObject) {
 
     }
 
     @Override
-    public String getNString(int columnIndex)   {
+    public String getNString(int columnIndex) {
         return null;
     }
 
     @Override
-    public String getNString(String columnLabel)   {
+    public String getNString(String columnLabel) {
         return null;
     }
 
     @Override
-    public Reader getNCharacterStream(int columnIndex)   {
+    public Reader getNCharacterStream(int columnIndex) {
         return null;
     }
 
     @Override
-    public Reader getNCharacterStream(String columnLabel)   {
+    public Reader getNCharacterStream(String columnLabel) {
         return null;
     }
 
     @Override
-    public void updateNCharacterStream(int columnIndex, Reader x, long length)   {
+    public void updateNCharacterStream(int columnIndex, Reader x, long length) {
 
     }
 
     @Override
-    public void updateNCharacterStream(String columnLabel, Reader reader, long length)   {
+    public void updateNCharacterStream(String columnLabel, Reader reader, long length) {
 
     }
 
     @Override
-    public void updateAsciiStream(int columnIndex, InputStream x, long length)   {
+    public void updateAsciiStream(int columnIndex, InputStream x, long length) {
 
     }
 
     @Override
-    public void updateBinaryStream(int columnIndex, InputStream x, long length)   {
+    public void updateBinaryStream(int columnIndex, InputStream x, long length) {
 
     }
 
     @Override
-    public void updateCharacterStream(int columnIndex, Reader x, long length)   {
+    public void updateCharacterStream(int columnIndex, Reader x, long length) {
 
     }
 
     @Override
-    public void updateAsciiStream(String columnLabel, InputStream x, long length)   {
+    public void updateAsciiStream(String columnLabel, InputStream x, long length) {
 
     }
 
     @Override
-    public void updateBinaryStream(String columnLabel, InputStream x, long length)   {
+    public void updateBinaryStream(String columnLabel, InputStream x, long length) {
 
     }
 
     @Override
-    public void updateCharacterStream(String columnLabel, Reader reader, long length)   {
+    public void updateCharacterStream(String columnLabel, Reader reader, long length) {
 
     }
 
     @Override
-    public void updateBlob(int columnIndex, InputStream inputStream, long length)   {
+    public void updateBlob(int columnIndex, InputStream inputStream, long length) {
 
     }
 
     @Override
-    public void updateBlob(String columnLabel, InputStream inputStream, long length)   {
+    public void updateBlob(String columnLabel, InputStream inputStream, long length) {
 
     }
 
     @Override
-    public void updateClob(int columnIndex, Reader reader, long length)   {
+    public void updateClob(int columnIndex, Reader reader, long length) {
 
     }
 
     @Override
-    public void updateClob(String columnLabel, Reader reader, long length)   {
+    public void updateClob(String columnLabel, Reader reader, long length) {
 
     }
 
     @Override
-    public void updateNClob(int columnIndex, Reader reader, long length)   {
+    public void updateNClob(int columnIndex, Reader reader, long length) {
 
     }
 
     @Override
-    public void updateNClob(String columnLabel, Reader reader, long length)   {
+    public void updateNClob(String columnLabel, Reader reader, long length) {
 
     }
 
     @Override
-    public void updateNCharacterStream(int columnIndex, Reader x)   {
+    public void updateNCharacterStream(int columnIndex, Reader x) {
 
     }
 
     @Override
-    public void updateNCharacterStream(String columnLabel, Reader reader)   {
+    public void updateNCharacterStream(String columnLabel, Reader reader) {
 
     }
 
     @Override
-    public void updateAsciiStream(int columnIndex, InputStream x)   {
+    public void updateAsciiStream(int columnIndex, InputStream x) {
 
     }
 
     @Override
-    public void updateBinaryStream(int columnIndex, InputStream x)   {
+    public void updateBinaryStream(int columnIndex, InputStream x) {
 
     }
 
     @Override
-    public void updateCharacterStream(int columnIndex, Reader x)   {
+    public void updateCharacterStream(int columnIndex, Reader x) {
 
     }
 
     @Override
-    public void updateAsciiStream(String columnLabel, InputStream x)   {
+    public void updateAsciiStream(String columnLabel, InputStream x) {
 
     }
 
     @Override
-    public void updateBinaryStream(String columnLabel, InputStream x)   {
+    public void updateBinaryStream(String columnLabel, InputStream x) {
 
     }
 
     @Override
-    public void updateCharacterStream(String columnLabel, Reader reader)   {
+    public void updateCharacterStream(String columnLabel, Reader reader) {
 
     }
 
     @Override
-    public void updateBlob(int columnIndex, InputStream inputStream)   {
+    public void updateBlob(int columnIndex, InputStream inputStream) {
 
     }
 
     @Override
-    public void updateBlob(String columnLabel, InputStream inputStream)   {
+    public void updateBlob(String columnLabel, InputStream inputStream) {
 
     }
 
     @Override
-    public void updateClob(int columnIndex, Reader reader)   {
+    public void updateClob(int columnIndex, Reader reader) {
 
     }
 
     @Override
-    public void updateClob(String columnLabel, Reader reader)   {
+    public void updateClob(String columnLabel, Reader reader) {
 
     }
 
     @Override
-    public void updateNClob(int columnIndex, Reader reader)   {
+    public void updateNClob(int columnIndex, Reader reader) {
 
     }
 
     @Override
-    public void updateNClob(String columnLabel, Reader reader)   {
+    public void updateNClob(String columnLabel, Reader reader) {
 
     }
 
     @Override
-    public <T> T getObject(int columnIndex, Class<T> type)   {
+    public <T> T getObject(int columnIndex, Class<T> type) {
         return null;
     }
 
     @Override
-    public <T> T getObject(String columnLabel, Class<T> type)   {
+    public <T> T getObject(String columnLabel, Class<T> type) {
         return null;
     }
 
     @Override
-    public <T> T unwrap(Class<T> iface)   {
+    public <T> T unwrap(Class<T> iface) {
         return null;
     }
 
     @Override
-    public boolean isWrapperFor(Class<?> iface)   {
+    public boolean isWrapperFor(Class<?> iface) {
         return false;
     }
 }

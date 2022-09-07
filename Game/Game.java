@@ -2,6 +2,7 @@ package Game;
 
 import Game.Core.Day;
 import Game.ORM.DbConnection;
+import Game.view.Printer;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -14,10 +15,10 @@ public class Game {
 
     private final Logger logger;
     public Game () throws SQLException {
+        DbConnection.get_instance(settings.URL, settings.Table);
         this.logger = Logger.getLogger(this.getClass().getSimpleName());
         this.init_days();
     }
-
     public void init_days() throws SQLException {
         for (String name: DbConnection.get_instance().get_table_names()){
             if(name.startsWith("Day")){
@@ -31,6 +32,9 @@ public class Game {
         }
     }
     public void Start(){
+        for(Day day : days){
+            Printer.print_day_header(day);
 
+        }
     }
 }

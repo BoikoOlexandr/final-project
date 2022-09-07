@@ -35,9 +35,10 @@ public class Printer {
         pw.println(str);
     }
 
-    private static void print_day_header(Day day) {
+    public static void print_day_header(Day day) {
        print(String.format("\n%sДень %s%s", splitter, day.getDay_number(), splitter));
     }
+
 
     private static void print_act_header(Act act) {
         print(act.header+splitter);

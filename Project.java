@@ -6,10 +6,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 public class Project {
-    public static void main(String[] args) throws SQLException{
-        DbConnection.get_instance(settings.URL, settings.Table);
+    public static void main(String[] args) throws SQLException {
         new Game().Start();
-
-
     }
 }

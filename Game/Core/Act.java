@@ -17,10 +17,12 @@ public class Act extends Table {
     public Act(ResultSet data) throws SQLException, IllegalAccessException {
         get_row(data);
     }
+
     public Act(int id, String day) throws SQLException, IllegalAccessException {
         get_row(DbConnection.get_instance().get_row_by_id(id, day));
     }
-    public String parse_text(){
+
+    public String parse_text() {
         Pattern pattern = Pattern.compile("[$].+[$]");
         Matcher matcher = pattern.matcher(text);
         System.out.println(matcher.find());
