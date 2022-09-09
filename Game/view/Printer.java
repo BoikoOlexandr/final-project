@@ -9,15 +9,18 @@ import java.nio.charset.StandardCharsets;
 
 public class Printer {
     static Input input = new Input();
-    static String splitter = "\n_______________________________________________\n";
+    static String splitter = "_______________________________________________\n";
     public static void print(String str){
         PrintWriter pw = new PrintWriter(new OutputStreamWriter(System.out, StandardCharsets.UTF_8), true);
         pw.println(str);
     }
     public static void print_day_header(Day day) {
-       print(String.format("\n%sДень %s%s", splitter, day.getDay_number(), splitter));
+       print(String.format("\n%sДень %s\n%s", splitter, day.getDay_number(), splitter));
     }
 
+    public static void print_splitter(){
+        print(splitter);
+    }
     private static void print_act_choices(String choices) {
         int i = 0;
         for(String choice: choices.split("\n"))

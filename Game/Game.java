@@ -40,7 +40,7 @@ public class Game {
     public void start_days(){
        for(Day day: days){
            Printer.print_day_header(day);
-//           day.print_day();
+           day.print_day();
        }
     }
 

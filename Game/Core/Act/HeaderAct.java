@@ -14,6 +14,7 @@ public class HeaderAct extends Act {
     @Override
     public void print_act() {
         Printer.print(this.header);
+        Printer.print_splitter();
         Printer.print(Printer.format_text(this.text));
     }
 }
