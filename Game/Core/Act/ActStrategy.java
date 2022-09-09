@@ -1,4 +1,4 @@
-package Game.Core;
+package Game.Core.Act;
 
 import java.sql.SQLException;
 

@@ -1,5 +1,7 @@
 package Game.Core;
 
+import Game.Core.Act.Act;
+import Game.Core.Act.ActGenerator;
 import Game.ORM.DbConnection;
 
 import java.sql.SQLException;
@@ -34,7 +36,7 @@ public class Day {
     }
 
     public void add_act(String type, int id) throws SQLException, IllegalAccessException {
-        this.act_list.add(new ActStrategy().get_act(type, id, day_name));
+        this.act_list.add(new ActGenerator().get_act(id, day_name));
     }
 
 
