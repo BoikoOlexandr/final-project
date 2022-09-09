@@ -11,12 +11,12 @@ import java.util.List;
 public class Day {
     List<Act> act_list = new ArrayList<>();
     private final String day_name;
+    private final int day_number;
+
 
     public int getDay_number() {
         return day_number;
     }
-
-    private final int day_number;
 
     public Day(int day_number) throws SQLException, IllegalAccessException {
         this.day_number = day_number;

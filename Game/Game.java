@@ -1,6 +1,7 @@
 package Game;
 
 import Game.Core.Day;
+import Game.Core.DaySort;
 import Game.ORM.DbConnection;
 import Game.view.Printer;
 
@@ -30,6 +31,7 @@ public class Game {
                 }
             }
         }
+        days.sort(new DaySort());
     }
     public void Start() throws SQLException, IllegalAccessException {
         this.init_days();
@@ -38,8 +40,9 @@ public class Game {
     public void start_days(){
        for(Day day: days){
            Printer.print_day_header(day);
-           day.print_day();
+//           day.print_day();
        }
     }
 
 }
+
