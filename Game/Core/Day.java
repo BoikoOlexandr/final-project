@@ -1,6 +1,6 @@
 package Game.Core;
 
-import Game.view.Printer;
+import Game.ORM.DbConnection;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -16,28 +16,31 @@ public class Day {
 
     private final int day_number;
 
-    public Day(int day_number) {
+    public Day(int day_number) throws SQLException, IllegalAccessException {
         this.day_number = day_number;
         this.day_name = String.format("day%d", day_number);
+        this.init_day();
     }
 
+    private void init_day() throws SQLException, IllegalAccessException {
+        DbConnection.get_instance().setTABLE(day_name);
+        int number_of_acts = DbConnection.get_instance().get_number_of_rows();
+        for (int id = 1; id<= number_of_acts; id++){
+            this.add_act("default", id);
+        }
+    }
     public List<Act> getAct_list() {
         return act_list;
     }
 
-    public void add_act(Act act) {
-        this.act_list.add(act);
+    public void add_act(String type, int id) throws SQLException, IllegalAccessException {
+        this.act_list.add(new ActStrategy().get_act(type, id, day_name));
     }
 
-    public void add_act(int act_id) throws SQLException, IllegalAccessException {
-        this.add_act(new Act(act_id, day_name));
-    }
 
-    public void print_day(){
+    public void print_day() {
         for (Act act: act_list){
-            Printer.print(act);
+            act.print_act();
         }
-
     }
-
 }

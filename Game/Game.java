@@ -14,12 +14,12 @@ public class Game {
     private final List<Day> days= new ArrayList<>();
 
     private final Logger logger;
-    public Game () throws SQLException {
+    public Game () throws SQLException, IllegalAccessException {
         DbConnection.get_instance(settings.URL, settings.Table);
         this.logger = Logger.getLogger(this.getClass().getSimpleName());
-        this.init_days();
+
     }
-    public void init_days() throws SQLException {
+    public void init_days() throws SQLException, IllegalAccessException {
         for (String name: DbConnection.get_instance().get_table_names()){
             if(name.startsWith("Day")){
                 try {
@@ -31,10 +31,15 @@ public class Game {
             }
         }
     }
-    public void Start(){
-        for(Day day : days){
-            Printer.print_day_header(day);
-
-        }
+    public void Start() throws SQLException, IllegalAccessException {
+        this.init_days();
+        start_days();
     }
+    public void start_days(){
+       for(Day day: days){
+           Printer.print_day_header(day);
+           day.print_day();
+       }
+    }
+
 }

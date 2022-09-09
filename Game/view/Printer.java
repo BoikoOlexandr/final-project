@@ -1,6 +1,5 @@
 package Game.view;
 
-import Game.Core.Act;
 import Game.Core.Day;
 import Game.settings;
 
@@ -11,37 +10,12 @@ import java.nio.charset.StandardCharsets;
 public class Printer {
     static Input input = new Input();
     static String splitter = "\n_______________________________________________\n";
-    public static void print(Day day) {
-        print_day_header(day);
-        for(Act act: day.getAct_list()){
-            print(act);
-        }
-    }
-
-    public static void print(Act act) {
-        print_act_header(act);
-        print( format_text(act.text));
-        if(act.choises != null){
-            print_act_choices(act.choises);
-            input.get_choice();
-        }else {
-            input.get_empty_input();
-        }
-    }
-
-
     public static void print(String str){
         PrintWriter pw = new PrintWriter(new OutputStreamWriter(System.out, StandardCharsets.UTF_8), true);
         pw.println(str);
     }
-
     public static void print_day_header(Day day) {
        print(String.format("\n%sДень %s%s", splitter, day.getDay_number(), splitter));
-    }
-
-
-    private static void print_act_header(Act act) {
-        print(act.header+splitter);
     }
 
     private static void print_act_choices(String choices) {
@@ -52,7 +26,7 @@ public class Printer {
         }
     }
 
-    private static String format_text(String text){
+    public static String format_text(String text){
         StringBuilder formatted_text = new StringBuilder();
         for (String paragraph: get_paragraphs(text)){
             formatted_text.append("\t");
