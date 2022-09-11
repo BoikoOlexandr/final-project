@@ -29,14 +29,14 @@ public class Printer {
         }
     }
 
-    public static String format_text(String text){
+    public static void print_formated_text(String text){
         StringBuilder formatted_text = new StringBuilder();
         for (String paragraph: get_paragraphs(text)){
             formatted_text.append("\t");
             formatted_text.append(set_row_length(paragraph));
             formatted_text.append("\n");
         }
-        return formatted_text.toString();
+        print(formatted_text.toString());
     }
 
     private static String[] get_paragraphs(String text){

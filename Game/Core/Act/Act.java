@@ -15,7 +15,11 @@ public abstract class Act extends Table {
         get_row(DbConnection.get_instance().get_row_by_id(id, day));
     }
 
-    public abstract void print_act();
+    public abstract void print_act() throws Exception;
+
+    protected String get_prompt(String value) throws Exception {
+        return OutputPromptList.get_instance().get_prompts().get(value);
+    }
 
 
 }

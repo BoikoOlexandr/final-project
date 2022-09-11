@@ -12,9 +12,12 @@ public class HeaderAct extends Act {
     }
 
     @Override
-    public void print_act() {
+    public void print_act() throws Exception {
         Printer.print(this.header);
         Printer.print_splitter();
-        Printer.print(Printer.format_text(this.text));
+        Printer.print_formated_text(this.text);
+        Printer.print(
+                get_prompt("default")
+        );
     }
 }

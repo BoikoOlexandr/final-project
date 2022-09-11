@@ -12,7 +12,10 @@ public class TextAct extends Act{
 
 
     @Override
-    public void print_act() {
-        Printer.print(Printer.format_text(this.text));
+    public void print_act() throws Exception {
+        Printer.print_formated_text(this.text);
+        Printer.print(
+                get_prompt("default")
+        );
     }
 }

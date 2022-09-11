@@ -13,14 +13,17 @@ import java.util.logging.Logger;
 
 public class Game {
     private final List<Day> days= new ArrayList<>();
-
+//    AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext("Game");
     private final Logger logger;
     public Game () throws SQLException, IllegalAccessException {
         DbConnection.get_instance(settings.URL, settings.Table);
         this.logger = Logger.getLogger(this.getClass().getSimpleName());
-
+        this.init_days();
     }
-    public void init_days() throws SQLException, IllegalAccessException {
+    public void Start() throws Exception {
+        start_days();
+    }
+    private void init_days() throws SQLException, IllegalAccessException {
         for (String name: DbConnection.get_instance().get_table_names()){
             if(name.startsWith("Day")){
                 try {
@@ -33,11 +36,7 @@ public class Game {
         }
         days.sort(new DaySort());
     }
-    public void Start() throws SQLException, IllegalAccessException {
-        this.init_days();
-        start_days();
-    }
-    public void start_days(){
+    private void start_days() throws Exception {
        for(Day day: days){
            Printer.print_day_header(day);
            day.print_day();

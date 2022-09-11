@@ -5,17 +5,26 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 
-public abstract class Table {
+public abstract class Table  implements Cloneable{
     Map<String, String> types;
     ResultSet data;
+
+    public Table get_table (int id, String table) throws SQLException, IllegalAccessException {
+        get_row(DbConnection.get_instance().get_row_by_id(id, table));
+        return this;
+    }
+
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+    public Table(){}
+
     protected void get_row(ResultSet data) throws SQLException, IllegalAccessException {
         this.types = DbConnection.get_instance().get_field_type_map();
-
         this.data = data;
         if(data.getClass() != NullResultSet.class) {
             Field[] fields = this.getClass().getFields();
             for(Field field: fields){
-
                 set_field_value(field);
             }
         }

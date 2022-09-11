@@ -40,7 +40,7 @@ public class Day {
     }
 
 
-    public void print_day() {
+    public void print_day() throws Exception {
         for (Act act: act_list){
             act.print_act();
         }
