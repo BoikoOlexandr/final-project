@@ -1,9 +1,7 @@
 package Game.Core.Act;
 
-import java.sql.SQLException;
-
 public class DefaultAct extends Act{
-    public DefaultAct(int id, String day) throws SQLException, IllegalAccessException {
+    public DefaultAct(int id, String day) throws Exception {
         super(id, day);
     }
 

@@ -4,7 +4,6 @@ import Game.Core.Act.Act;
 import Game.Core.Act.ActGenerator;
 import Game.ORM.DbConnection;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,13 +17,13 @@ public class Day {
         return day_number;
     }
 
-    public Day(int day_number) throws SQLException, IllegalAccessException {
+    public Day(int day_number) throws Exception {
         this.day_number = day_number;
         this.day_name = String.format("day%d", day_number);
         this.init_day();
     }
 
-    private void init_day() throws SQLException, IllegalAccessException {
+    private void init_day() throws Exception {
         DbConnection.get_instance().setTABLE(day_name);
         int number_of_acts = DbConnection.get_instance().get_number_of_rows();
         for (int id = 1; id<= number_of_acts; id++){
@@ -35,7 +34,7 @@ public class Day {
         return act_list;
     }
 
-    public void add_act(String type, int id) throws SQLException, IllegalAccessException {
+    public void add_act(String type, int id) throws Exception {
         this.act_list.add(new ActGenerator().get_act(id, day_name));
     }
 

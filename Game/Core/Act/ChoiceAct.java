@@ -2,13 +2,12 @@ package Game.Core.Act;
 
 import Game.view.Printer;
 
-import java.sql.SQLException;
-
 public class ChoiceAct extends Act{
 
 
-    public ChoiceAct(int id, String day) throws SQLException, IllegalAccessException {
+    public ChoiceAct(int id, String day) throws Exception {
         super(id, day);
+        this.__input_type = "choise";
     }
     @Override
     public void print_act() throws Exception {
@@ -18,9 +17,8 @@ public class ChoiceAct extends Act{
         Printer.print_formated_text(this.text);
         Printer.print_splitter();
         Printer.print(this.choises);
-        Printer.print(
-                get_prompt("choise")
-        );
+        Printer.print("");
+        __input.input();
     }
 
 }

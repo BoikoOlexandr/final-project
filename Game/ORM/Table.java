@@ -25,7 +25,9 @@ public abstract class Table  implements Cloneable{
         if(data.getClass() != NullResultSet.class) {
             Field[] fields = this.getClass().getFields();
             for(Field field: fields){
-                set_field_value(field);
+                if(!field.getName().startsWith("__")) {
+                    set_field_value(field);
+                }
             }
         }
     }

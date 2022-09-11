@@ -8,7 +8,6 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 
 public class Printer {
-    static Input input = new Input();
     static String splitter = "_______________________________________________\n";
     public static void print(String str){
         PrintWriter pw = new PrintWriter(new OutputStreamWriter(System.out, StandardCharsets.UTF_8), true);

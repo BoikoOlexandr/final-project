@@ -1,9 +1,7 @@
 package Game.Core.Act;
 
-import java.sql.SQLException;
-
 public class ActGenerator {
-    public Act get_act(int id, String day) throws SQLException, IllegalAccessException {
+    public Act get_act(int id, String day) throws Exception {
         Act act = null;
         DefaultAct default_act = new DefaultAct(id, day);
         if(default_act.header == null || default_act.header.equals("")){

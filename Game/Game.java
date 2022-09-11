@@ -5,7 +5,6 @@ import Game.Core.DaySort;
 import Game.ORM.DbConnection;
 import Game.view.Printer;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -15,7 +14,7 @@ public class Game {
     private final List<Day> days= new ArrayList<>();
 //    AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext("Game");
     private final Logger logger;
-    public Game () throws SQLException, IllegalAccessException {
+    public Game () throws Exception {
         DbConnection.get_instance(settings.URL, settings.Table);
         this.logger = Logger.getLogger(this.getClass().getSimpleName());
         this.init_days();
@@ -23,7 +22,7 @@ public class Game {
     public void Start() throws Exception {
         start_days();
     }
-    private void init_days() throws SQLException, IllegalAccessException {
+    private void init_days() throws Exception{
         for (String name: DbConnection.get_instance().get_table_names()){
             if(name.startsWith("Day")){
                 try {

@@ -1,9 +1,7 @@
 package Game.Core.Act;
 
-import java.sql.SQLException;
-
 public class ActStrategy {
-    public Act get_act(String act_name, int id, String day) throws SQLException, IllegalAccessException {
+    public Act get_act(String act_name, int id, String day) throws Exception {
         Act act = null;
         switch (act_name){
             case "default": act = new DefaultAct(id, day);

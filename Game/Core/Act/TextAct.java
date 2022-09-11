@@ -2,20 +2,17 @@ package Game.Core.Act;
 
 import Game.view.Printer;
 
-import java.sql.SQLException;
-
 public class TextAct extends Act{
 
-    public TextAct(int id, String day) throws SQLException, IllegalAccessException {
+    public TextAct(int id, String day) throws Exception {
         super(id, day);
+        this.__input_type = "default";
     }
 
 
     @Override
     public void print_act() throws Exception {
         Printer.print_formated_text(this.text);
-        Printer.print(
-                get_prompt("default")
-        );
+        __input.input();
     }
 }

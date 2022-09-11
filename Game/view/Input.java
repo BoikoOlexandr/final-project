@@ -1,43 +1,49 @@
 package Game.view;
 
+import Game.Command.ChoiseCommand;
 import Game.Command.QuitCommand;
+import Game.Core.Act.Act;
 
 import java.util.Objects;
 import java.util.Scanner;
 
-import static Game.view.Printer.print;
-
 public class Input {
 
-    private void input(String prompt){
-        Scanner in = new Scanner(System.in);
-        print(prompt);
-        execute_command(in.nextLine());
-    }
-    public void get_empty_input() {
-        input("<<<Нажмите Enter>>>");
-    }
+    private Act act;
+    private String prompt;
 
-    public void get_choice(){
-        input("Ведите номер одного из вариантов");
-    }
+    private Scanner in = new Scanner(System.in);
+    private String users_chose;
+    public Input(Act act){
+        this.act = act;
 
-    private void execute_command(String command){
-        command = command.trim().toLowerCase();
-        if(Objects.equals(command, "e") || Objects.equals(command, "q")){
-            new QuitCommand().execute();
-        }
-        if(is_didgit(command)){
-            print("Ok");
+    }
+    public void input() throws Exception {
+        prompt = act.get_prompt();
+        if(prompt != null) {
+            Printer.print(prompt);
+            users_chose = in.nextLine().toLowerCase().trim();
+            this.call_command();
         }
     }
 
-    private boolean is_didgit(String str){
-        try {
-        int a = Integer.parseInt(str);
-            return true;
-        } catch (Exception ignored) {
+    private void call_command() {
+        if(Objects.equals(users_chose, "q")){
+            new QuitCommand().execute(users_chose);
+        }else if(Objects.equals(act.get__input_type(), "choise") && is_digit()){
+            new ChoiseCommand().execute(users_chose);
         }
-        return false;
     }
+
+    private boolean is_digit(){
+        for(char ch: users_chose.toCharArray()){
+            if(!Character.isDigit(ch)){
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+
 }
