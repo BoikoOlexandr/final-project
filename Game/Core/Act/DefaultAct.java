@@ -1,7 +1,9 @@
 package Game.Core.Act;
 
+import Game.Core.Day;
+
 public class DefaultAct extends Act{
-    public DefaultAct(int id, String day) throws Exception {
+    public DefaultAct(int id, Day day) throws Exception {
         super(id, day);
     }
 

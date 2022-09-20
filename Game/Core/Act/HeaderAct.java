@@ -1,11 +1,12 @@
 package Game.Core.Act;
 
 
+import Game.Core.Day;
 import Game.view.Printer;
 
 public class HeaderAct extends Act {
 
-    public HeaderAct(int id, String day) throws Exception {
+    public HeaderAct(int id, Day day) throws Exception {
         super(id, day);
         this.__input_type = "default";
     }
@@ -13,7 +14,7 @@ public class HeaderAct extends Act {
     public void print_act() throws Exception {
         Printer.print(this.header);
         Printer.print_splitter();
-        Printer.print_formated_text(this.text);
+        Printer.print_formatted_text(this.text);
         __input.input();
     }
 }

@@ -2,11 +2,12 @@ package Game.view;
 
 import Game.Core.Day;
 import Game.settings;
+import org.springframework.stereotype.Component;
 
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
-
+@Component
 public class Printer {
     static String splitter = "_______________________________________________\n";
     public static void print(String str){
@@ -28,7 +29,7 @@ public class Printer {
         }
     }
 
-    public static void print_formated_text(String text){
+    public static void print_formatted_text(String text){
         StringBuilder formatted_text = new StringBuilder();
         for (String paragraph: get_paragraphs(text)){
             formatted_text.append("\t");

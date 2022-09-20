@@ -8,7 +8,7 @@ public abstract class TableList {
 
     public TableList(Table table) throws SQLException, IllegalAccessException, CloneNotSupportedException {
         String table_name  = table.getClass().getSimpleName();
-        DbConnection.get_instance().setTABLE(table_name);
+        DbConnection.get_instance().set_table(table_name);
         int number_of_rows = DbConnection.get_instance().get_number_of_rows();
         for (int id=1; id <= number_of_rows; id++){
             table = (Table) table.clone();

@@ -33,7 +33,7 @@ public abstract class Table  implements Cloneable{
     }
 
     public void get_row_by_attribute(String attribute, String value) throws SQLException, IllegalAccessException {
-        DbConnection.get_instance().setTABLE(this.getClass().getSimpleName());
+        DbConnection.get_instance().set_table(this.getClass().getSimpleName());
         get_row(DbConnection.get_instance().get_rows_by_attribute(attribute, value));
     }
     public void delete() throws NoSuchFieldException, IllegalAccessException {
@@ -47,7 +47,7 @@ public abstract class Table  implements Cloneable{
 
     public void insert() throws SQLException, IllegalAccessException {
         Field[] fields = this.getClass().getDeclaredFields();
-        DbConnection.get_instance().setTABLE(this.getClass().getSimpleName());
+        DbConnection.get_instance().set_table(this.getClass().getSimpleName());
         DbConnection.get_instance().insert(fields, this);
     }
 
