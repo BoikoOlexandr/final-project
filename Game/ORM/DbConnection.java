@@ -12,24 +12,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DbConnection {
-
     public static final int OUT_OF_RANGE = 0;
-
     private String table;
-
-    public void set_table(String table) {
-        this.table = table;
-    }
-
     private static DbConnection instance;
     private Connection connection;
     private final Logger logger;
 
-    public static DbConnection get_instance(String URL, String Table) {
+    public static void get_instance(String URL, String Table) {
         if (instance == null) {
             instance = new DbConnection(URL, Table);
         }
-        return instance;
     }
 
     public static DbConnection get_instance() {
@@ -51,7 +43,6 @@ public class DbConnection {
     public void update(Field[] fields, Table obj) throws IllegalAccessException, SQLException {
         Map<String, String> set_map = new HashMap<>();
         Map<String, String> where_map = new HashMap<>();
-        int id = 0;
         for (Field field : fields) {
             if (field.getName().trim().equalsIgnoreCase("id")) {
                 where_map.put(field.getName(), String.valueOf(field.get(obj)));
@@ -62,34 +53,29 @@ public class DbConnection {
         int updated = connection.createStatement().executeUpdate(new SqlBuilder()
                 .update(table)
                 .set(set_map)
-                .where(where_map).getSQL());
+                .where(where_map).get_SQL());
         if (updated >= 1) {
             logger.log(Level.WARNING, String.format("Table %s is updated", table));
         } else {
             logger.log(Level.WARNING, String.format("Table %s is not updated", table));
         }
-
-
     }
 
-    public void insert(Field[] fields, Table obj) throws IllegalAccessException, SQLException {
+    public void insert(Field[] fields, Table obj) throws Exception {
         Map<String, String> insert_map = new HashMap<>();
-        int id = 0;
         for (Field field : fields) {
             if (!field.getName().trim().equals("id")) {
                 insert_map.put(field.getName(), String.valueOf(field.get(obj)));
             }
         }
-        System.out.println(new SqlBuilder().Insert(table, insert_map).getSQL());
-        int updated = connection.createStatement().executeUpdate(new SqlBuilder()
-                .Insert(table, insert_map).getSQL());
+        connection.createStatement().executeUpdate(new SqlBuilder().insert(table, insert_map).get_SQL());
     }
 
     public Map<String, String> get_field_type_map() throws SQLException {
         ResultSetMetaData types = connection.createStatement()
                 .executeQuery(new SqlBuilder()
-                        .Select()
-                        .from(table).getSQL())
+                        .select()
+                        .from(table).get_SQL())
                 .getMetaData();
         Map<String, String> field_type_map = new HashMap<>();
         for (int i = 1; i < types.getColumnCount() + 1; i++) {
@@ -102,9 +88,9 @@ public class DbConnection {
         ResultSet resultSet;
         try {
             PreparedStatement statement = connection.prepareStatement(new SqlBuilder().
-                    Select().
+                    select().
                     from(table).
-                    where("id").getSQL());
+                    where("id").get_SQL());
             statement.setInt(1, id);
             resultSet = statement.executeQuery();
             if (resultSet.getInt("id") == OUT_OF_RANGE) {
@@ -124,23 +110,24 @@ public class DbConnection {
 
     public ResultSet get_rows_by_attribute(String Attribute, String value) throws SQLException {
         return connection.createStatement().executeQuery(new SqlBuilder().
-                Select().
+                select().
                 from(table).
-                where(Attribute, value).getSQL());
+                where(Attribute, value).get_SQL());
     }
 
-    public void delete(int id) {
+    public void delete(int id) throws SQLException {
         Map<String, String> where_map = new HashMap<>();
         where_map.put("id", String.valueOf(id));
-        String SQL = new SqlBuilder().delete(table).where(where_map).getSQL();
+        String SQL = new SqlBuilder().delete(table).where(where_map).get_SQL();
+        connection.createStatement().executeUpdate(SQL);
     }
 
     public List<String> get_table_names() throws SQLException {
         List<String> table_names = new ArrayList<>();
         ResultSet res = connection.createStatement().executeQuery(new SqlBuilder().
-                Select("name").
+                select("name").
                 from("sqlite_master").
-                where("type", "table").getSQL());
+                where("type", "table").get_SQL());
         while (res.next()) {
             table_names.add(res.getString(1));
         }
@@ -149,7 +136,11 @@ public class DbConnection {
 
     public int get_number_of_rows() throws SQLException {
         return connection.createStatement().executeQuery(new SqlBuilder().
-                Select(" COUNT(*)").
-                from(table).getSQL()).getInt(1);
+                select(" COUNT(*)").
+                from(table).get_SQL()).getInt(1);
+    }
+
+    public void set_table(String table) {
+        this.table = table;
     }
 }

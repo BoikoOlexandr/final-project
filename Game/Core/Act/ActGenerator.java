@@ -8,7 +8,7 @@ public class ActGenerator {
         DefaultAct default_act = new DefaultAct(id, day);
         if(default_act.header == null || default_act.header.equals("")){
             act = new TextAct(id, day);
-        } else if (default_act.choises == null || default_act.choises.equals("")) {
+        } else if (default_act.choice == null || default_act.choice.equals("")) {
             act = new HeaderAct(id, day);
         }else {
             act = new ChoiceAct(id, day);

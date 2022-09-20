@@ -1,12 +1,11 @@
 package Game.ORM;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 public abstract class TableList {
     protected ArrayList<Table> rows = new ArrayList<>();
 
-    public TableList(Table table) throws SQLException, IllegalAccessException, CloneNotSupportedException {
+    public TableList(Table table) throws Exception {
         String table_name  = table.getClass().getSimpleName();
         DbConnection.get_instance().set_table(table_name);
         int number_of_rows = DbConnection.get_instance().get_number_of_rows();

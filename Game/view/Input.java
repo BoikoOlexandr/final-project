@@ -1,6 +1,6 @@
 package Game.view;
 
-import Game.Command.ChoiseCommand;
+import Game.Command.ChoiceCommand;
 import Game.Command.NextCommand;
 import Game.Command.QuitCommand;
 import Game.Core.Act.Act;
@@ -9,24 +9,25 @@ import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 import java.util.Scanner;
+
 @Component
 public class Input {
 
     private final Day day;
-    private Act act;
-    private String prompt;
+    private final Act act;
 
-    private int offset=1;
-    private Scanner in = new Scanner(System.in);
+    private int offset = 1;
+    private final Scanner in = new Scanner(System.in);
     private String users_chose;
-    public Input(Act act, Day day){
+
+    public Input(Act act, Day day) {
         this.act = act;
         this.day = day;
-
     }
+
     public void input() throws Exception {
-        prompt = act.get_prompt();
-        if(prompt != null) {
+        String prompt = act.get_prompt();
+        if (prompt != null) {
             Printer.print(prompt);
         }
         users_chose = in.nextLine().toLowerCase().trim();
@@ -39,34 +40,28 @@ public class Input {
     }
 
     private void call_command() throws Exception {
-        if(Objects.equals(users_chose, "q")){
+        if (Objects.equals(users_chose, "q")) {
             new QuitCommand().execute(users_chose, day);
-        }else if(Objects.equals(act.get__input_type(), "choise") && is_valid_didgit()){
-            new ChoiseCommand().execute(String.format("%s %d", users_chose, act.get_choise_count()), day);
-        } else if (Objects.equals(act.get__input_type(), "choise")) {
+        } else if (Objects.equals(act.get__input_type(), "choice") && is_valid_digit()) {
+            new ChoiceCommand().execute(String.format("%s %d", users_chose, act.get_choice_count()), day);
+        } else if (Objects.equals(act.get__input_type(), "choice")) {
             this.input();
         } else {
             new NextCommand().execute(offset, day);
         }
     }
 
-    private boolean is_valid_didgit(){
-        if(Objects.equals(users_chose, ""))
-        {
+    private boolean is_valid_digit() {
+        if (Objects.equals(users_chose, "")) {
             return false;
         }
-        for(char ch: users_chose.toCharArray()){
-            if(!Character.isDigit(ch)){
+        for (char ch : users_chose.toCharArray()) {
+            if (!Character.isDigit(ch)) {
                 return false;
             }
         }
-        if(Integer.parseInt(users_chose) <= act.get_choise_count() && Integer.parseInt(users_chose)>0) {
-            return true;
-        }else {
-            return false;
-        }
+        return Integer.parseInt(users_chose) <= act.get_choice_count() && Integer.parseInt(users_chose) > 0;
     }
-
 
 
 }

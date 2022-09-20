@@ -3,6 +3,7 @@ package Game;
 import Game.Core.Day;
 import Game.Core.DaySort;
 import Game.ORM.DbConnection;
+import Game.view.Printer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,7 @@ public class Game {
         for (Day day : days) {
             day.run_day();
         }
+        Printer.print("Дальше будет....");
     }
 }
 

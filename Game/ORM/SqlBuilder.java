@@ -5,12 +5,12 @@ import java.util.Map;
 public class SqlBuilder {
     private String SQL = "";
 
-    public SqlBuilder Select(){
+    public SqlBuilder select(){
         SQL += "SELECT * ";
         return this;
     }
 
-    public SqlBuilder Insert(String Table, Map<String, String> map_field_value){
+    public SqlBuilder insert(String Table, Map<String, String> map_field_value){
         StringBuilder fields = new StringBuilder();
         StringBuilder values = new StringBuilder();
         for(String field: map_field_value.keySet()){
@@ -26,12 +26,12 @@ public class SqlBuilder {
 
         return this;
     }
-    public SqlBuilder Select(String field){
+    public SqlBuilder select(String field){
         SQL += "SELECT " + field + " ";
         return this;
     }
 
-    public SqlBuilder Select(String[] fields){
+    public SqlBuilder select(String[] fields){
         SQL += "SELECT ";
         set_fields(fields);
         return this;
@@ -81,7 +81,7 @@ public class SqlBuilder {
         return this.from(table_name);
     }
 
-    public String getSQL() {
+    public String get_SQL() {
         return SQL;
     }
 

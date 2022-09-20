@@ -9,7 +9,7 @@ public abstract class Table  implements Cloneable{
     Map<String, String> types;
     ResultSet data;
 
-    public Table get_table (int id, String table) throws SQLException, IllegalAccessException {
+    public Table get_table (int id, String table) throws Exception {
         get_row(DbConnection.get_instance().get_row_by_id(id, table));
         return this;
     }
@@ -19,7 +19,7 @@ public abstract class Table  implements Cloneable{
     }
     public Table(){}
 
-    protected void get_row(ResultSet data) throws SQLException, IllegalAccessException {
+    protected void get_row(ResultSet data) throws Exception {
         this.types = DbConnection.get_instance().get_field_type_map();
         this.data = data;
         if(data.getClass() != NullResultSet.class) {
@@ -32,11 +32,11 @@ public abstract class Table  implements Cloneable{
         }
     }
 
-    public void get_row_by_attribute(String attribute, String value) throws SQLException, IllegalAccessException {
+    public void get_row_by_attribute(String attribute, String value) throws Exception {
         DbConnection.get_instance().set_table(this.getClass().getSimpleName());
         get_row(DbConnection.get_instance().get_rows_by_attribute(attribute, value));
     }
-    public void delete() throws NoSuchFieldException, IllegalAccessException {
+    public void delete() throws NoSuchFieldException, IllegalAccessException, SQLException {
         Field Id = this.getClass().getDeclaredField("id");
         DbConnection.get_instance().delete((Integer) Id.get(this));
     }
@@ -45,7 +45,7 @@ public abstract class Table  implements Cloneable{
         DbConnection.get_instance().update(fields, this);
     }
 
-    public void insert() throws SQLException, IllegalAccessException {
+    public void insert() throws Exception {
         Field[] fields = this.getClass().getDeclaredFields();
         DbConnection.get_instance().set_table(this.getClass().getSimpleName());
         DbConnection.get_instance().insert(fields, this);

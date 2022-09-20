@@ -8,6 +8,7 @@ public class ChosenAct extends Act{
     public ChosenAct(int id, Day day, int offset) throws Exception {
         super(id, day);
         this.__offset = offset;
+        this.__input_type = "default";
     }
 
     @Override

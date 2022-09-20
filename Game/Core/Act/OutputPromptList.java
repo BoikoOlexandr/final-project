@@ -3,7 +3,6 @@ package Game.Core.Act;
 import Game.ORM.Table;
 import Game.ORM.TableList;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,7 +10,6 @@ public class OutputPromptList extends TableList {
 
     private static OutputPromptList instance;
 
-    OutputPrompt output_prompt = new OutputPrompt();
     public Map<String, String> get_prompts() {
         return prompts;
     }
@@ -24,7 +22,7 @@ public class OutputPromptList extends TableList {
         }
         return instance;
     }
-    private OutputPromptList() throws SQLException, IllegalAccessException, NoSuchFieldException, CloneNotSupportedException {
+    private OutputPromptList() throws Exception {
         super(new OutputPrompt());
         init_prompts();
     }
@@ -34,7 +32,6 @@ public class OutputPromptList extends TableList {
                     (String) row.getClass().getDeclaredField("name").get(row),
                     (String) row.getClass().getDeclaredField("value").get(row)
             );
-
         }
     }
 }
