@@ -4,7 +4,7 @@ import Game.Core.Day;
 
 public class ChoiseCommand implements Command {
     @Override
-    public void execute(String command, Day day) throws Exception {
+    public void execute(String command, Day day) {
         System.out.println(command);
         String[] commandes = command.split(" ");
         int choise = Integer.parseInt(commandes[0]) + day.getAct_id();
