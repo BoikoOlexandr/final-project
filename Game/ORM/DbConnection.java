@@ -1,5 +1,9 @@
 package Game.ORM;
 
+import Game.ORM.Sql.SqlDeleteBuilder;
+import Game.ORM.Sql.SqlInsertBuilder;
+import Game.ORM.Sql.SqlSelectBuilder;
+import Game.ORM.Sql.SqlUpdateBuilder;
 import org.sqlite.SQLiteConfig;
 
 import java.lang.reflect.Field;
@@ -50,10 +54,12 @@ public class DbConnection {
                 set_map.put(field.getName(), String.valueOf(field.get(obj)));
             }
         }
-        int updated = connection.createStatement().executeUpdate(new SqlBuilder()
-                .update(table)
+        int updated = connection.createStatement().executeUpdate(
+                new SqlUpdateBuilder(table)
                 .set(set_map)
-                .where(where_map).get_SQL());
+                .where(where_map)
+                .get_SQL()
+        );
         if (updated >= 1) {
             logger.log(Level.WARNING, String.format("Table %s is updated", table));
         } else {
@@ -68,14 +74,15 @@ public class DbConnection {
                 insert_map.put(field.getName(), String.valueOf(field.get(obj)));
             }
         }
-        connection.createStatement().executeUpdate(new SqlBuilder().insert(table, insert_map).get_SQL());
+        connection.createStatement().executeUpdate(new SqlInsertBuilder(table, insert_map).get_SQL());
     }
 
     public Map<String, String> get_field_type_map() throws SQLException {
         ResultSetMetaData types = connection.createStatement()
-                .executeQuery(new SqlBuilder()
-                        .select()
-                        .from(table).get_SQL())
+                .executeQuery(
+                        new SqlSelectBuilder()
+                        .from(table).get_SQL()
+                )
                 .getMetaData();
         Map<String, String> field_type_map = new HashMap<>();
         for (int i = 1; i < types.getColumnCount() + 1; i++) {
@@ -87,10 +94,11 @@ public class DbConnection {
     public ResultSet get_row_by_id(int id) {
         ResultSet resultSet;
         try {
-            PreparedStatement statement = connection.prepareStatement(new SqlBuilder().
-                    select().
+            PreparedStatement statement = connection.prepareStatement(
+                    new SqlSelectBuilder().
                     from(table).
-                    where("id").get_SQL());
+                    where("id").get_SQL()
+            );
             statement.setInt(1, id);
             resultSet = statement.executeQuery();
             if (resultSet.getInt("id") == OUT_OF_RANGE) {
@@ -102,32 +110,37 @@ public class DbConnection {
         }
         return resultSet;
     }
-
     public ResultSet get_row_by_id(int id, String table) {
         this.table = table;
         return this.get_row_by_id(id);
     }
 
     public ResultSet get_rows_by_attribute(String Attribute, String value) throws SQLException {
-        return connection.createStatement().executeQuery(new SqlBuilder().
-                select().
+        return connection.createStatement().executeQuery(
+                new SqlSelectBuilder().
                 from(table).
-                where(Attribute, value).get_SQL());
+                where(Attribute, value).get_SQL()
+        );
     }
 
     public void delete(int id) throws SQLException {
         Map<String, String> where_map = new HashMap<>();
         where_map.put("id", String.valueOf(id));
-        String SQL = new SqlBuilder().delete(table).where(where_map).get_SQL();
+        String SQL =
+                new SqlDeleteBuilder().
+                from(table).
+                where(where_map).get_SQL();
+
         connection.createStatement().executeUpdate(SQL);
     }
 
     public List<String> get_table_names() throws SQLException {
         List<String> table_names = new ArrayList<>();
-        ResultSet res = connection.createStatement().executeQuery(new SqlBuilder().
-                select("name").
+        ResultSet res = connection.createStatement().executeQuery(
+                new SqlSelectBuilder("name").
                 from("sqlite_master").
-                where("type", "table").get_SQL());
+                where("type", "table").get_SQL()
+        );
         while (res.next()) {
             table_names.add(res.getString(1));
         }
@@ -135,11 +148,11 @@ public class DbConnection {
     }
 
     public int get_number_of_rows() throws SQLException {
-        return connection.createStatement().executeQuery(new SqlBuilder().
-                select(" COUNT(*)").
-                from(table).get_SQL()).getInt(1);
+        return connection.createStatement().executeQuery(
+                new SqlSelectBuilder(" COUNT(*)").
+                from(table).get_SQL()
+        ).getInt(1);
     }
-
     public void set_table(String table) {
         this.table = table;
     }
